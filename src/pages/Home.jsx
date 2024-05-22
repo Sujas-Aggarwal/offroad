@@ -3,12 +3,14 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function Home() {
+    const navigate = useNavigate();
     const [urlData, setUrlData] = useState(null);
     const [url, setUrl] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     async function handleSubmit(e) {
         setIsLoading(true);
         e.preventDefault();
+        navigate("/analytics");
         setIsLoading(false);
     }
     let navBar = ["Home", "About", "Tools"];
@@ -48,7 +50,7 @@ function Home() {
                 </div>
                 <div className="flex z-[10] flex-col justify-center items-center ">
                     <div className="flex gap-4 justify-center items-center">
-                        <h1 className="text-5xl sm:text-6xl font-bold text-[#ff9a00]">
+                        <h1 className="text-5xl sm:text-6xl font-bold text-white">
                             OffRoad
                         </h1>
                         <div className="w-[45px] h-[45px] bg-center bg-[url(/favicon.svg)] bg-no-repeat bg-cover rounded-full"></div>
@@ -59,6 +61,7 @@ function Home() {
                     >
                         <input
                             type="url"
+                            required
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
                             placeholder="Enter URL Here"
@@ -66,7 +69,7 @@ function Home() {
                         />
                         <button
                             type="submit"
-                            className="p-2 outline-none mt-1 font-light text-white rounded-md w-full bg-[#ff9a00] active:bg-[#ff6200]"
+                            className="p-2 outline-none mt-1 font-light text-white rounded-md w-full bg-[#ff0000] active:bg-[#ff6200]"
                         >
                             {isLoading ? "Loading..." : "Download"}
                         </button>

@@ -7,6 +7,7 @@ import {
     RouterProvider,
     createBrowserRouter,
 } from "react-router-dom";
+import Analytics from "./pages/Analytics";
 
 function App() {
     const router = createBrowserRouter([
@@ -22,6 +23,10 @@ function App() {
             path: "/tools",
             element: <div>Tools</div>,
         },
+        {
+            path: "/analytics",
+            element:<Analytics/>,
+        }
     ]);
     return (
         <div className="w-full max-w-[100%] overflow-x-hidden h-full min-h-screen bg-[#ff9a00]">
