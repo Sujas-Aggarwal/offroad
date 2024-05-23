@@ -75,7 +75,7 @@ function Home() {
                     })}
                 </ul>
             </div> */}
-            <div className="w-full h-[85vh] relative bg-[linear-gradient(#ff0000,#ffc100)] flex justify-center items-center">
+            <div className="w-full h-[80vh] relative bg-[linear-gradient(#ff0000,#ffc100)] flex justify-center items-center">
                 <div className="absolute bottom-[-5px] left-0 w-full ">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
