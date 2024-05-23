@@ -1,17 +1,57 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { neon } from "@neondatabase/serverless";
+const sql = neon(
+    "postgresql://neondb_owner:rZeA4wf8cBpI@ep-young-violet-a1ptwyju-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
+);
 function Home() {
     const navigate = useNavigate();
-    const [urlData, setUrlData] = useState(null);
     const [url, setUrl] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     async function handleSubmit(e) {
-        setIsLoading(true);
         e.preventDefault();
-        navigate("/analytics");
-        setIsLoading(false);
+        setIsLoading(true);
+        // Check if the URL already exists in the database
+        const existingPost = await sql(
+            `SELECT short FROM urls WHERE original = '${url}' LIMIT 1;`
+        );
+        if (existingPost.length > 0) {
+            // If URL exists, return the existing short URL
+            setIsLoading(false);
+            navigate(`analytics/${existingPost[0].short}`);
+        } else {
+            // If URL does not exist, create a new short URL
+            const generateRandomCode = () => {
+                const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+                let result = "";
+                for (let i = 0; i < 8; i++) {
+                    result += characters.charAt(
+                        Math.floor(Math.random() * characters.length)
+                    );
+                }
+                return result;
+            };
+
+            while (true) {
+                const shortURL = generateRandomCode();
+
+                const shortExist = await sql(
+                    `SELECT short FROM urls WHERE short = '${shortURL}' LIMIT 1;`
+                );
+                if (shortExist.length === 0) {
+                    await sql(
+                        `INSERT INTO urls (original, short, visits) VALUES ('${url}', '${shortURL}', 0);`
+                    );
+                    navigate(`analytics/${shortURL}`);
+
+                    break;
+                }
+            }
+
+            // Insert the new URL into the database
+
+            setIsLoading(false);
+        }
     }
     let navBar = ["Home", "About", "Tools"];
     return (
@@ -69,14 +109,16 @@ function Home() {
                         />
                         <button
                             type="submit"
-                            className="p-2 outline-none mt-1 font-light text-white rounded-md w-full bg-[#ff0000] active:bg-[#ff6200]"
+                            className="p-2 font-bold outline-none mt-1 text-white rounded-md w-full bg-[#ff0000] active:bg-[#ff6200]"
                         >
-                            {isLoading ? "Loading..." : "Download"}
+                            {isLoading ? "Loading..." : "Make it Short"}
                         </button>
+                        <p className="text-white text-sm self-center mt-2 font-bold">
+                            Ad-Free URL Shortner and Tracker
+                        </p>
                     </form>
                 </div>
             </div>
-            {urlData != null && <div>URL Data</div>}
         </div>
     );
 }

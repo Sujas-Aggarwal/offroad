@@ -8,6 +8,8 @@ import {
     createBrowserRouter,
 } from "react-router-dom";
 import Analytics from "./pages/Analytics";
+import Redirect from "./pages/Redirect";
+import { Toaster } from "react-hot-toast";
 
 function App() {
     const router = createBrowserRouter([
@@ -24,12 +26,16 @@ function App() {
             element: <div>Tools</div>,
         },
         {
-            path: "/analytics",
-            element:<Analytics/>,
+            path: "/analytics/:id",
+            element: <Analytics />,
+        },{
+            path: "/link/:id",
+            element: <Redirect/>,
         }
     ]);
     return (
         <div className="w-full max-w-[100%] overflow-x-hidden h-full min-h-screen bg-[#ff9a00]">
+            <Toaster/>
             <RouterProvider router={router} />
             <Footer />
         </div>
